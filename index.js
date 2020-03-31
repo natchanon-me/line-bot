@@ -41,41 +41,35 @@ exports.LineBot = functions.region(region).https.onRequest((req, res) => {
             }
           });
     }else if (event.message.type === "text" && event.message.text === "Events"){
-        const eventExist = db.collection("upcomingEvent").doc("03302020").get().then( returnData => {
-            if(returnData.exists){
-                let event1 = returnData.data().event1
-                let event2 = returnData.data().event2
+        const eventExist = db.collection("upcomingEvent").where('eventstatus','==', true).get()
+        .then( returnDatas => {
+            let itemArray = [];
+            if (returnDatas.empty){
+                return reply(event.replyToken, {
+                    type: 'text',
+                    text: 'ขออภัย ไม่มี event ในขณะนี้'
+                })
+            };
+                returnDatas.forEach(returnData => {
+                    itemArray.push({
+                        imageUrl: returnData.data().picUri,
+                        action: {
+                            type: "uri",
+                            label: returnData.data().name,
+                            uri: returnData.data().uri
+                        }
+                    })
+                });
+                
                 reply(event.replyToken, {
-                    type: "template",
-                    altText: "This is an image carousel template",
+                    type: 'template',
+                    altText: 'Event carousel template show',
                     template: {
-                        type: "image_carousel",
-                        columns: [
-                            {
-                                imageUrl: "https://vignette.wikia.nocookie.net/line/images/b/bb/2015-brown.png",
-                                action: {
-                                    type: "uri",
-                                    label: event1,
-                                    uri: "https://www.facebook.com/thelayerspop/"
-                                }
-                            },
-                            {
-                                imageUrl: "https://vignette.wikia.nocookie.net/line/images/1/10/2015-cony.png",
-                                action: {
-                                    type: "uri",
-                                    label: event2,
-                                    uri: "https://www.facebook.com/thelayerspop/"
-                                }
-                            }
-                        ]
+                        type: 'image_carousel',
+                        columns: itemArray
                     }
                 })
-            } else{
-                reply(event.replyToken, {
-                    type: 'text',
-                    text: 'ยังไม่มีกิจกรรมหรือ Workshop ในเดือนนี้ค่ะ' //ทำแยกเป็น OOP
-                })
-            }
+
             return null;
         }).catch(err => {
             console.log(err)
