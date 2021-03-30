@@ -7,7 +7,7 @@ const region = 'asia-east2';
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/';
 const LINE_HEADER = {
     'Content-type': 'application/json',
-    'Authorization': 'Bearer LQmKuyzWyTLIFAXz0eOs10NVqzj7WVRp+TsxVYw+xftTsyy4uE7knr1kUdij1eQs/c1TequRE6VcVNq4Y9WpAAbsoAipEIcq/IIWDOnCSN57HYFyf7WtQg921IRiWdaQL7QmyI0z9MqXgsaPPQycUQdB04t89/1O/w1cDnyilFU='
+    'Authorization': '-------'
 };
 
 admin.initializeApp({
